@@ -1,53 +1,99 @@
 package com.example.barcode_reader;
 
+import android.app.Activity;
+import android.content.Context;
+import android.hardware.camera2.CameraAccessException;
+
 import androidx.annotation.NonNull;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.view.TextureRegistry;
 
-/** BarcodeReaderPlugin */
-public class BarcodeReaderPlugin implements FlutterPlugin, MethodCallHandler {
-  /// The MethodChannel that will the communication between Flutter and native Android
-  ///
-  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-  /// when the Flutter Engine is detached from the Activity
+/**
+ * BarcodeReaderPlugin
+ */
+public class BarcodeReaderPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
+  private FlutterPluginBinding flutterPluginBinding;
+  private Context context;
+  private Activity activity;
   private MethodChannel channel;
+  private TextureRegistry textureRegistry;
+  private Camera camera;
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "barcode_reader");
+    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "barcode_reader");
     channel.setMethodCallHandler(this);
+    this.flutterPluginBinding = flutterPluginBinding;
+    this.context = flutterPluginBinding.getApplicationContext();
+    this.textureRegistry = flutterPluginBinding.getTextureRegistry();
   }
 
-  // This static function is optional and equivalent to onAttachedToEngine. It supports the old
-  // pre-Flutter-1.12 Android projects. You are encouraged to continue supporting
-  // plugin registration via this function while apps migrate to use the new Android APIs
-  // post-flutter-1.12 via https://flutter.dev/go/android-project-migration.
-  //
-  // It is encouraged to share logic between onAttachedToEngine and registerWith to keep
-  // them functionally equivalent. Only one of onAttachedToEngine or registerWith will be called
-  // depending on the user's project. onAttachedToEngine or registerWith must both be defined
-  // in the same class.
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), "barcode_reader");
     channel.setMethodCallHandler(new BarcodeReaderPlugin());
   }
 
+
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    if (call.method.equals("getPlatformVersion")) {
-      result.success("Android " + android.os.Build.VERSION.RELEASE);
-    } else {
-      result.notImplemented();
+    if (call.method.equals("openCamera")) {
+      TakePicture(result);
     }
+    if (call.method.equals("detectBarcode")) {
+      Detect(result);
+    }
+
+  }
+
+  private void TakePicture(Result result) {
+
+    TextureRegistry.SurfaceTextureEntry flutterSurfaceTexture =
+            textureRegistry.createSurfaceTexture();
+
+    camera = new Camera(
+            activity, flutterPluginBinding.getBinaryMessenger(), flutterSurfaceTexture, result
+    );
+    camera.openCamera();
+
+  }
+
+  private void Detect(Result result) {
+    camera.detect();
+    result.success("Detect");
+
   }
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
+  }
+
+  @Override
+  public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+    this.activity = binding.getActivity();
+
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+
+  }
+
+  @Override
+  public void onDetachedFromActivity() {
+
   }
 }
