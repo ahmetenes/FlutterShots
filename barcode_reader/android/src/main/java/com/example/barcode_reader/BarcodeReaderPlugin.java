@@ -49,8 +49,9 @@ public class BarcodeReaderPlugin implements FlutterPlugin, MethodCallHandler, Ac
       cameraPreview(result);
     }
     if (call.method.equals("detectBarcode")) {
-      detect(result);
+         detect(result);
     }
+
 
   }
 
@@ -60,15 +61,15 @@ public class BarcodeReaderPlugin implements FlutterPlugin, MethodCallHandler, Ac
             textureRegistry.createSurfaceTexture();
 
     camera = new Camera(
-            activity, flutterPluginBinding.getBinaryMessenger(), flutterSurfaceTexture, result
+            activity, flutterSurfaceTexture, result
     );
     camera.openCamera();
 
   }
 
   private void detect(Result result) {
-    camera.detect();
-    result.success("Detect");
+    camera.detect(result);
+
 
   }
 
