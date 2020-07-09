@@ -17,9 +17,11 @@ class BarcodeReader {
     return resultMap["texture_id"];
   }
 
-  static Future<String> get detectBarcode async {
-    final String barcode = await _channel.invokeMethod('detectBarcode');
-
-    return barcode;
+  static Future<List<String>> get detectBarcode async {
+    final Map<dynamic, dynamic> resultMap =
+        await _channel.invokeMethod('detectBarcode');
+    var dlist = new List<dynamic>();
+    dlist = resultMap["barcodes"];
+    return dlist.cast<String>().toList();
   }
 }
