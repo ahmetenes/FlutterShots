@@ -16,7 +16,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
   int _textureId;
-  String barcode = "";
+  List<String> barcode;
 
   @override
   void initState() {
@@ -48,7 +48,6 @@ class _MyAppState extends State<MyApp> {
     int textureId;
 
     textureId = await BarcodeReader.openCamera;
-    print(textureId);
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
@@ -61,7 +60,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> detectBarcode() async {
-    String _barcode;
+    List<String> _barcode;
 
     _barcode = await BarcodeReader.detectBarcode;
 
@@ -75,23 +74,35 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('Barcode Reader Plugin Example'),
         ),
-        body: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-          Text("$barcode"),
-          _textureId != null
-              ? Container(
-                  width: 400,
-                  height: 300,
-                  child: Texture(textureId: _textureId),
-                )
-              : Text(_textureId.toString()),
-          FloatingActionButton(onPressed: () {
-            detectBarcode();
-          }),
-        ]),
+        body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Flexible(
+                flex: 1,
+                child: Text(
+                  (barcode != null && barcode.length > 0)
+                      ? "${barcode[0]}"
+                      : "Nothing Returned",
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+              Flexible(
+                flex: 5,
+                child: _textureId != null
+                    ? Container(
+                        child: Texture(textureId: _textureId),
+                      )
+                    : Text(_textureId.toString()),
+              ),
+            ]),
+        floatingActionButton: FloatingActionButton(onPressed: () {
+          detectBarcode();
+        }),
       ),
     );
   }
-
 }
