@@ -31,3 +31,6 @@ android {
         disable 'InvalidPackage'
     }
 }
+dependencies {
+    implementation 'com.google.mlkit:barcode-scanning:16.0.1'
+}
