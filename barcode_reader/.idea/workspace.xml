@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="5aedcef1-13fd-40e4-90c3-2c8521426ec8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_for_Android.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_for_Android.xml" afterDir="false" />
+    <list default="true" id="5aedcef1-13fd-40e4-90c3-2c8521426ec8" name="Default Changelist" comment="Increased the minSdkVersion required and targetSdkVersion to highest">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/example/barcode_reader/BarcodeReaderPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/example/barcode_reader/BarcodeReaderPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/barcode_reader.iml" beforeDir="false" afterPath="$PROJECT_DIR$/barcode_reader.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/example/barcode_reader/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/example/barcode_reader/Camera.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/barcode_reader.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/barcode_reader.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +37,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ChangesTree.GroupingKeys" value="directory" />
     <property name="dart.analysis.tool.window.force.activate" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -53,27 +56,44 @@
     </task>
     <servers />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Increased the minSdkVersion required and targetSdkVersion to highest" />
+    <option name="LAST_COMMIT_MESSAGE" value="Increased the minSdkVersion required and targetSdkVersion to highest" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
+  </component>
   <component name="WindowStateProjectService">
     <state x="808" y="408" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1594221960131">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="808" y="408" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1594221960131" />
-    <state width="1876" height="275" key="GridCell.Tab.0.bottom" timestamp="1594222143602">
+    <state x="496" y="113" key="CommitChangelistDialog2" timestamp="1594260207913">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="275" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1594222143602" />
-    <state width="1876" height="275" key="GridCell.Tab.0.center" timestamp="1594222143602">
+    <state x="496" y="113" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1594260207913" />
+    <state x="230" y="85" key="DiffContextDialog" timestamp="1594259796802">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="275" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1594222143602" />
-    <state width="1876" height="275" key="GridCell.Tab.0.left" timestamp="1594222143601">
+    <state x="230" y="85" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1594259796802" />
+    <state width="1876" height="340" key="GridCell.Tab.0.bottom" timestamp="1594260254419">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="275" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1594222143601" />
-    <state width="1876" height="275" key="GridCell.Tab.0.right" timestamp="1594222143602">
+    <state width="1876" height="340" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1594260254419" />
+    <state width="1876" height="340" key="GridCell.Tab.0.center" timestamp="1594260254419">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="275" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1594222143602" />
+    <state width="1876" height="340" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1594260254419" />
+    <state width="1876" height="340" key="GridCell.Tab.0.left" timestamp="1594260254419">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1876" height="340" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1594260254419" />
+    <state width="1876" height="340" key="GridCell.Tab.0.right" timestamp="1594260254419">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1876" height="340" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1594260254419" />
+    <state x="540" y="262" key="IDE.errors.dialog" timestamp="1594252338922">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="540" y="262" key="IDE.errors.dialog/0.0.1920.1040@0.0.1920.1040" timestamp="1594252338922" />
     <state x="655" y="342" key="com.intellij.ide.util.TipDialog" timestamp="1594221724064">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
