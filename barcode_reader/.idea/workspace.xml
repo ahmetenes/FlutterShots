@@ -4,14 +4,9 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5aedcef1-13fd-40e4-90c3-2c8521426ec8" name="Default Changelist" comment="Increased the minSdkVersion required and targetSdkVersion to highest">
+    <list default="true" id="5aedcef1-13fd-40e4-90c3-2c8521426ec8" name="Default Changelist" comment="Added new Floating Action Button and its onPressed method.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/example/barcode_reader/BarcodeReaderPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/example/barcode_reader/BarcodeReaderPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/example/barcode_reader/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/example/barcode_reader/Camera.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/barcode_reader.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/barcode_reader.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +15,16 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="39a98d6c180b7ece" />
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="Ahmet Enes Semerci &lt;ahmetenessemerci@hotmail.com&gt;" />
+      </list>
+    </option>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="IgnoredFileRootStore">
@@ -38,6 +43,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ChangesTree.GroupingKeys" value="directory" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="dart.analysis.tool.window.force.activate" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -54,11 +60,48 @@
       <option name="presentableId" value="Default" />
       <updated>1594189732991</updated>
     </task>
+    <task id="LOCAL-00001" summary="Added invoke method for Barcode detection">
+      <created>1594317935179</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1594317935179</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Modified to be a list type due to multiple barcode detection">
+      <created>1594335835512</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1594335835512</updated>
+    </task>
+    <task id="LOCAL-00003" summary="results will be send by detect function.">
+      <created>1594335991690</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1594335991690</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Increased the minSdkVersion required and targetSdkVersion to highest" />
-    <option name="LAST_COMMIT_MESSAGE" value="Increased the minSdkVersion required and targetSdkVersion to highest" />
+    <MESSAGE value="Added new Floating Action Button and its onPressed method." />
+    <MESSAGE value="Added invoke method for Barcode detection" />
+    <MESSAGE value="Modified to be a list type due to multiple barcode detection" />
+    <MESSAGE value="results will be send by detect function." />
+    <option name="LAST_COMMIT_MESSAGE" value="results will be send by detect function." />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="WindowStateProjectService">
@@ -66,30 +109,30 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="808" y="408" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1594221960131" />
-    <state x="496" y="113" key="CommitChangelistDialog2" timestamp="1594260207913">
+    <state x="376" y="129" width="1206" height="813" key="CommitChangelistDialog2" timestamp="1594336336835">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="496" y="113" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1594260207913" />
-    <state x="230" y="85" key="DiffContextDialog" timestamp="1594259796802">
+    <state x="376" y="129" width="1206" height="813" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1594336336835" />
+    <state x="230" y="85" key="DiffContextDialog" timestamp="1594318463850">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="230" y="85" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1594259796802" />
-    <state width="1876" height="340" key="GridCell.Tab.0.bottom" timestamp="1594260254419">
+    <state x="230" y="85" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1594318463850" />
+    <state width="1876" height="275" key="GridCell.Tab.0.bottom" timestamp="1594335676304">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="340" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1594260254419" />
-    <state width="1876" height="340" key="GridCell.Tab.0.center" timestamp="1594260254419">
+    <state width="1876" height="275" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1594335676304" />
+    <state width="1876" height="275" key="GridCell.Tab.0.center" timestamp="1594335676304">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="340" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1594260254419" />
-    <state width="1876" height="340" key="GridCell.Tab.0.left" timestamp="1594260254419">
+    <state width="1876" height="275" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1594335676304" />
+    <state width="1876" height="275" key="GridCell.Tab.0.left" timestamp="1594335676303">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="340" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1594260254419" />
-    <state width="1876" height="340" key="GridCell.Tab.0.right" timestamp="1594260254419">
+    <state width="1876" height="275" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1594335676303" />
+    <state width="1876" height="275" key="GridCell.Tab.0.right" timestamp="1594335676304">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="340" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1594260254419" />
+    <state width="1876" height="275" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1594335676304" />
     <state x="540" y="262" key="IDE.errors.dialog" timestamp="1594252338922">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
