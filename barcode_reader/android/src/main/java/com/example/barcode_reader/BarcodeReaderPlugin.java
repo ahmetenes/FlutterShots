@@ -2,7 +2,6 @@ package com.example.barcode_reader;
 
 import android.app.Activity;
 import android.content.Context;
-import android.hardware.camera2.CameraAccessException;
 
 import androidx.annotation.NonNull;
 
@@ -29,15 +28,16 @@ public class BarcodeReaderPlugin implements FlutterPlugin, MethodCallHandler, Ac
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "barcode_reader");
+    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "Reader");
     channel.setMethodCallHandler(this);
     this.flutterPluginBinding = flutterPluginBinding;
     this.context = flutterPluginBinding.getApplicationContext();
-    this.textureRegistry = flutterPluginBinding.getTextureRegistry();
+
+
   }
 
   public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), "barcode_reader");
+    final MethodChannel channel = new MethodChannel(registrar.messenger(), "Reader");
     channel.setMethodCallHandler(new BarcodeReaderPlugin());
   }
 
@@ -45,15 +45,16 @@ public class BarcodeReaderPlugin implements FlutterPlugin, MethodCallHandler, Ac
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     if (call.method.equals("openCamera")) {
-      TakePicture(result);
+
+      cameraPreview(result);
     }
     if (call.method.equals("detectBarcode")) {
-      Detect(result);
+      detect(result);
     }
 
   }
 
-  private void TakePicture(Result result) {
+  private void cameraPreview(Result result) {
 
     TextureRegistry.SurfaceTextureEntry flutterSurfaceTexture =
             textureRegistry.createSurfaceTexture();
@@ -65,7 +66,7 @@ public class BarcodeReaderPlugin implements FlutterPlugin, MethodCallHandler, Ac
 
   }
 
-  private void Detect(Result result) {
+  private void detect(Result result) {
     camera.detect();
     result.success("Detect");
 
@@ -79,7 +80,7 @@ public class BarcodeReaderPlugin implements FlutterPlugin, MethodCallHandler, Ac
   @Override
   public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
     this.activity = binding.getActivity();
-
+    this.textureRegistry = flutterPluginBinding.getTextureRegistry();
   }
 
   @Override
