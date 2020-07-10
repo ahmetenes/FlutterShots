@@ -30,7 +30,6 @@ abstract class AllBooks implements Built<AllBooks, AllBooksBuilder> {
 }
 
 List<Book> parseBookList(String jsonString)  {
-  print(jsonString);
   final parsed = jsonDecode(jsonString);
   AllBooks booklist = standardSerializers.deserializeWith(AllBooks.serializer,parsed);
   return booklist.items.toList();
