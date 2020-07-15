@@ -1,6 +1,16 @@
 package com.example.xmljson;
 
+import android.util.Xml;
+
 import androidx.annotation.NonNull;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xml.sax.*;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
@@ -39,11 +49,18 @@ public class XmljsonPlugin implements FlutterPlugin, MethodCallHandler {
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    if (call.method.equals("getPlatformVersion")) {
-      result.success("Android " + android.os.Build.VERSION.RELEASE);
+    if (call.method.equals("convertXmlToJson")) {
+      String xmlString = call.argument("xmlString");
+      String jsonString = convertToJson(xmlString);
+      result.success("Android " + call.argument("xmlString"));
     } else {
       result.notImplemented();
     }
+  }
+
+  private String convertToJson(String xmlString) {
+    //TODO: Conversion will happen here
+    return " An XML String";
   }
 
   @Override
