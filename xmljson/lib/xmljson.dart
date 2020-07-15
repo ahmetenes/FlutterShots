@@ -6,8 +6,11 @@ class Xmljson {
   static const MethodChannel _channel =
       const MethodChannel('xmljson');
 
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
+  static Future<String> get convertXmlToJson async {
+    final String xmlString = "An XML string";
+    final String version = await _channel.invokeMethod('convertXmlToJson',<String,dynamic>{
+      "xmlString":xmlString,
+    });
     return version;
   }
 }
