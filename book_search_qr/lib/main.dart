@@ -1,26 +1,43 @@
 import 'dart:collection';
+import 'dart:math';
 import 'dart:ui';
 
+
 import 'package:book_search_qr/src/all_books.dart';
+import 'package:book_search_qr/src/pages/barcodeCamPage.dart';
+import 'package:book_search_qr/src/pages/wishlist.dart';
 import 'package:book_search_qr/src/search_result_bloc.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:barcode_reader/barcode_reader.dart';
-
+import 'package:provider/provider.dart';
 void main() {
-  runApp(BookSearchApp());
+
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(
+      create: (_) => WishlistNotifier(),
+    ),
+    Provider<SearchResultBloc>(
+      create: (_) => SearchResultBloc(),
+    ),
+
+  ], child: BookSearchApp()));
 }
+
+
 
 class BookSearchApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: <String, WidgetBuilder>{
+        '/a': (BuildContext context) => SearchBarcodeScreen(),
+      },
       theme: ThemeData(
         primaryColor: Colors.brown,
         backgroundColor: Colors.brown,
         scaffoldBackgroundColor: Colors.brown,
-        accentColor: Colors.white,
+        accentColor: Colors.blue,
       ),
       title: "QRBook",
       home: HomePage(),
@@ -36,6 +53,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var _currentPage = 1;
 
+
   @override
   void initState() {
     super.initState();
@@ -48,7 +66,7 @@ class _HomePageState extends State<HomePage> {
         title: Text("QRBook"),
         leading: Icon(Icons.bookmark),
       ),
-      body: _currentPage == 1 ? SearchScreen() : SearchBarcodeScreen(),
+      body:  _currentPage == 1 ? SearchScreen() : WishlistScreen(),
       bottomNavigationBar: BottomNavigationBar(
         selectedIconTheme: IconThemeData(
           color: Colors.blue,
@@ -62,7 +80,7 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
               icon: Icon(Icons.search), title: Text("Search")),
           BottomNavigationBarItem(
-              icon: Icon(Icons.camera), title: Text("Barcode"))
+              icon: Icon(Icons.star), title: Text("WishList"))
         ],
         onTap: (index) {
           setState(() {
@@ -74,48 +92,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class SearchBarcodeScreen extends StatefulWidget {
-  @override
-  _SearchBarcodeScreenState createState() => _SearchBarcodeScreenState();
-}
-
-class _SearchBarcodeScreenState extends State<SearchBarcodeScreen> {
-  final BarcodeReader reader = new BarcodeReader();
-  int textureId;
-  Future<void> getTextureId() async {
-    int _textureId;
-    _textureId = await BarcodeReader.openCamera;
-
-    setState(() {
-      textureId = _textureId;
-    });
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getTextureId();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        textureId != null
-            ? Flexible(flex: 1, child: Texture(textureId: textureId))
-            : Center(
-
-              child: CircularProgressIndicator(
-                  value: null,
-                ),
-            ),
-      ],
-    );
-  }
-}
-
 class SearchScreen extends StatefulWidget {
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -123,12 +99,19 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   String searchTerm = "İlk";
-  final bloc = SearchResultBloc();
 
-  _updateSearch(String str) {
+
+  _updateSearch(String str,BuildContext context) {
     setState(() {
       searchTerm = str;
-      this.bloc.updateSearch(str);
+      Provider.of<SearchResultBloc>(context,listen: false).updateSearch(str);
+    });
+  }
+
+  _updateSearchWithBarcode(String str,BuildContext context) {
+    setState(() {
+      searchTerm = str;
+      Provider.of<SearchResultBloc>(context,listen: false).updateSearchWB(str);
     });
   }
 
@@ -138,21 +121,15 @@ class _SearchScreenState extends State<SearchScreen> {
       children: <Widget>[
         MySearchBar(
           parentAction: _updateSearch,
+          parentAction2: _updateSearchWithBarcode,
         ),
-        Expanded(
-            child: SearchResult(
-          bloc: bloc,
-        ))
+        Expanded(child: SearchResult())
       ],
     );
   }
 }
 
 class SearchResult extends StatefulWidget {
-  final SearchResultBloc bloc;
-
-  SearchResult({Key key, this.bloc}) : super(key: key);
-
   @override
   _SearchResultState createState() => _SearchResultState();
 }
@@ -161,15 +138,17 @@ class _SearchResultState extends State<SearchResult> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<UnmodifiableListView<Book>>(
-      stream: widget.bloc.books,
+      stream: Provider.of<SearchResultBloc>(context).books,
       initialData: UnmodifiableListView<Book>([]),
       builder: (context, snapshot) {
         return ListView(
           children: snapshot.data.isNotEmpty
-              ? snapshot.data.map(_buildBookItem).toList()
+              ? snapshot.data.map((b) => _buildBookItem(b, context)).toList()
               : [
                   ListTile(
-                    leading: CircularProgressIndicator(value: null,),
+                    leading: CircularProgressIndicator(
+                      value: null,
+                    ),
                     title: Text("Loading"),
                   )
                 ],
@@ -179,8 +158,15 @@ class _SearchResultState extends State<SearchResult> {
   }
 }
 
-Widget _buildBookItem(Book b) {
-  return Padding(
+Widget barcodeSearchIcon() {
+  return Transform.rotate(
+    angle: -90 * pi / 180,
+    child: Icon(Icons.line_weight),
+  );
+}
+
+Widget _buildBookItem(Book b, BuildContext context) {
+    return Padding(
     key: Key(b.id.toString()),
     padding: const EdgeInsets.all(8.0),
     child: new Container(
@@ -189,49 +175,60 @@ Widget _buildBookItem(Book b) {
         color: Colors.grey[300],
       ),
       padding: EdgeInsets.all(10.0),
-      child: new ExpansionTile(
+      child: new ListTile(
         leading: Icon(Icons.bookmark),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            IconButton(
+              icon:Provider.of<WishlistNotifier>(context).wishlist.contains(b.id)? Icon(Icons.star_border):Icon(Icons.star),
+              onPressed: () {
+                Provider.of<WishlistNotifier>(context, listen: false)
+                    .appendBook(b);
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.add_circle_outline),
+              onPressed: () {
+                print("button");
+              },
+            ),
+          ],
+        ),
         title: Text(
           b.volumeInfo.title,
           style: TextStyle(
             fontSize: 16.0,
           ),
         ),
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              b.volumeInfo.industryIdentifiers.length > 0
-                  ? Text(b.volumeInfo.industryIdentifiers.first.identifier
-                      .toString())
-                  : Text("No ISBN"),
-              RawMaterialButton(
-                highlightColor: Colors.transparent,
-                fillColor: Colors.transparent,
-                child: IconButton(
-                  splashColor: Colors.blue,
-                  iconSize: 30,
-                  icon: Icon(Icons.link),
-                  onPressed: () {
-                    launch(b.selfLink);
-                  },
-                ),
-                padding: EdgeInsets.all(15.0),
-                shape: CircleBorder(),
-              )
-            ],
-          ),
-        ],
-        initiallyExpanded: false,
+        subtitle: b.volumeInfo.industryIdentifiers.length > 0
+            ? Text(b.volumeInfo.industryIdentifiers.first.identifier)
+            : Text("No ISBN data"),
       ),
     ),
   );
 }
 
-class MySearchBar extends StatefulWidget {
-  final void Function(String value) parentAction;
+class Ext extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[],
+        ),
+      ],
+    );
+  }
+}
 
-  MySearchBar({Key key, this.parentAction}) : super(key: key);
+class MySearchBar extends StatefulWidget {
+  final void Function(String value,BuildContext context) parentAction;
+  final void Function(String value,BuildContext context) parentAction2;
+
+  MySearchBar({Key key, this.parentAction, this.parentAction2})
+      : super(key: key);
 
   @override
   _MySearchBarState createState() => _MySearchBarState();
@@ -269,6 +266,7 @@ class _MySearchBarState extends State<MySearchBar> {
       child: Row(
         children: <Widget>[
           Flexible(
+            flex: 4,
             child: TextField(
               controller: _controller,
               decoration: InputDecoration(
@@ -277,21 +275,44 @@ class _MySearchBarState extends State<MySearchBar> {
               onTap: () {},
             ),
           ),
-          RawMaterialButton(
-            highlightColor: Colors.transparent,
-            fillColor: Colors.transparent,
-            child: IconButton(
-              splashColor: Colors.blue,
-              iconSize: 30,
-              icon: Icon(Icons.search),
-              onPressed: () {
-                widget.parentAction(_controller.value.text);
-                _controller.clear();
-              },
+          Flexible(
+            flex: 1,
+            child: RawMaterialButton(
+              highlightColor: Colors.transparent,
+              fillColor: Colors.transparent,
+              child: IconButton(
+                splashColor: Colors.blue,
+                iconSize: 30,
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  widget.parentAction(_controller.value.text,context);
+                  _controller.clear();
+                },
+              ),
+              shape: CircleBorder(),
             ),
-            padding: EdgeInsets.all(15.0),
-            shape: CircleBorder(),
-          )
+          ),
+          Flexible(
+            flex: 1,
+            child: RawMaterialButton(
+              highlightColor: Colors.transparent,
+              fillColor: Colors.transparent,
+              child: IconButton(
+                splashColor: Colors.blue,
+                iconSize: 30,
+                icon: barcodeSearchIcon(),
+                onPressed: () async {
+                  String barcode =
+                      await Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => SearchBarcodeScreen(),
+                  ));
+                  widget.parentAction2(barcode,context);
+                  _controller.clear();
+                },
+              ),
+              shape: CircleBorder(),
+            ),
+          ),
         ],
       ),
     );
