@@ -24,9 +24,22 @@ class SearchResultBloc {
       _booksSubject.add(UnmodifiableListView(_books));
     });
   }
+  Future<Null> updateSearchWB(String str) async{
+    _books.clear();
+    _searchTerm = str;
+
+    return _getBooksWB().then((_) {
+      _booksSubject.add(UnmodifiableListView(_books));
+    });
+  }
 
   Future<Null> _getBooks() async {
     List<Book> _booklist = await getBookItems(_searchTerm);
+
+    _books = _booklist;
+  }
+  Future<Null> _getBooksWB() async {
+    List<Book> _booklist = await getBookItemsWB(_searchTerm);
 
     _books = _booklist;
   }
@@ -41,6 +54,20 @@ class SearchResultBloc {
       throw NothingFetchedError('Anything found');
     }
   }
+
+  Future<List<Book>> getBookItemsWB(String str) async{
+    final url =
+        "https://www.googleapis.com/books/v1/volumes?q=isbn:$_searchTerm &fields=items";
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      return parseBookList(response.body.toString());
+    } else {
+      throw NothingFetchedError('Anything found');
+    }
+  }
+
+
+
 }
 
 class NothingFetchedError {
