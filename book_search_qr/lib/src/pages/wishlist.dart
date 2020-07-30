@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../all_books.dart';
 
@@ -9,6 +10,7 @@ class WishlistScreen extends StatefulWidget {
   @override
   _WishlistScreenState createState() => _WishlistScreenState();
 }
+
 
 class _WishlistScreenState extends State<WishlistScreen> {
   @override
@@ -21,6 +23,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
       body: StreamBuilder(
         stream: Firestore.instance.collection("wishlist").snapshots(),
         builder: (context, snapshot) {
+
           return snapshot.hasData?
           ListView.builder(
             itemCount: snapshot.data.documents.length,
@@ -47,36 +50,12 @@ class _WishlistScreenState extends State<WishlistScreen> {
 
 
 
-class WishListView extends StatelessWidget {
-  const WishListView({
-    Key key,
-    @required this.widget,
-  }) : super(key: key);
-
-  final WishlistScreen widget;
-
-  @override
-  Widget build(BuildContext context) {
-    widget.wishlist.length > 0 ? print("wishlist exist") : print("nonexist");
-    return ListView(
-      children: widget.wishlist.map((book) {
-        return ListTile(
-          title: Text(book.volumeInfo.title),
-        );
-      }).toList(),
-    );
-  }
-}
 
 class WishlistNotifier with ChangeNotifier {
-  static List _wishlist = [];
 
-  final sub = Firestore.instance.collection("wishlist").snapshots().listen((event) {_wishlist = event.documents.map((e) => e.data["id"]).toList();});
 
-   get wishlist =>_wishlist;
-
-  void appendBook(Book b) {
-    Firestore.instance.collection("wishlist").add({
+  void appendBook(Book b,BuildContext context) {
+    Provider.of<Firestore>(context,listen: false).collection("wishlist").add({
       "title":b.volumeInfo.title,
       "id":b.id,
     });
@@ -84,9 +63,12 @@ class WishlistNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeBook(Book b) {
-
-
+  Future<void> removeBook(Book b,BuildContext context) async {
+    DocumentReference docRef = await
+    Provider.of<Firestore>(context,listen: false).collection("wishlist").getDocuments()
+        .then((value) => value.documents.where((element) => element.data["id"]==b.id).toList())
+        .then((value) => value.first.reference);
+    await docRef.delete();
     notifyListeners();
   }
 }
