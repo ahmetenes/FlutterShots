@@ -2,29 +2,36 @@ import 'dart:collection';
 import 'dart:math';
 import 'dart:ui';
 
-
 import 'package:book_search_qr/src/all_books.dart';
+import 'package:book_search_qr/src/database/FirebaseService.dart';
 import 'package:book_search_qr/src/pages/barcodeCamPage.dart';
 import 'package:book_search_qr/src/pages/wishlist.dart';
 import 'package:book_search_qr/src/search_result_bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-void main() {
 
+void main() {
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(
+    Provider<Firestore>(
+      create: (context) => FirebaseDatabase().database,
+    ),
+    StreamProvider<QuerySnapshot>(
+      create: (_) => FirebaseDatabase().stream,
+    ),
+    StreamProvider<List<String>>(
+      create: (context) => FirebaseDatabase().wishlistIds,
+    ),
+    ChangeNotifierProvider<WishlistNotifier>(
       create: (_) => WishlistNotifier(),
     ),
     Provider<SearchResultBloc>(
       create: (_) => SearchResultBloc(),
     ),
-
   ], child: BookSearchApp()));
 }
-
-
 
 class BookSearchApp extends StatelessWidget {
   @override
@@ -53,7 +60,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var _currentPage = 1;
 
-
   @override
   void initState() {
     super.initState();
@@ -66,7 +72,7 @@ class _HomePageState extends State<HomePage> {
         title: Text("QRBook"),
         leading: Icon(Icons.bookmark),
       ),
-      body:  _currentPage == 1 ? SearchScreen() : WishlistScreen(),
+      body: _currentPage == 1 ? SearchScreen() : WishlistScreen(),
       bottomNavigationBar: BottomNavigationBar(
         selectedIconTheme: IconThemeData(
           color: Colors.blue,
@@ -100,18 +106,17 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   String searchTerm = "İlk";
 
-
-  _updateSearch(String str,BuildContext context) {
+  _updateSearch(String str, BuildContext context) {
     setState(() {
       searchTerm = str;
-      Provider.of<SearchResultBloc>(context,listen: false).updateSearch(str);
+      Provider.of<SearchResultBloc>(context, listen: false).updateSearch(str);
     });
   }
 
-  _updateSearchWithBarcode(String str,BuildContext context) {
+  _updateSearchWithBarcode(String str, BuildContext context) {
     setState(() {
       searchTerm = str;
-      Provider.of<SearchResultBloc>(context,listen: false).updateSearchWB(str);
+      Provider.of<SearchResultBloc>(context, listen: false).updateSearchWB(str);
     });
   }
 
@@ -137,13 +142,14 @@ class SearchResult extends StatefulWidget {
 class _SearchResultState extends State<SearchResult> {
   @override
   Widget build(BuildContext context) {
+
     return StreamBuilder<UnmodifiableListView<Book>>(
       stream: Provider.of<SearchResultBloc>(context).books,
       initialData: UnmodifiableListView<Book>([]),
-      builder: (context, snapshot) {
-        return ListView(
+      builder: (context, snapshot) =>
+        ListView(
           children: snapshot.data.isNotEmpty
-              ? snapshot.data.map((b) => _buildBookItem(b, context)).toList()
+              ? snapshot.data.map((b) => _buildBookItem(b,context)).toList()
               : [
                   ListTile(
                     leading: CircularProgressIndicator(
@@ -152,8 +158,8 @@ class _SearchResultState extends State<SearchResult> {
                     title: Text("Loading"),
                   )
                 ],
-        );
-      },
+        )
+      ,
     );
   }
 }
@@ -166,7 +172,10 @@ Widget barcodeSearchIcon() {
 }
 
 Widget _buildBookItem(Book b, BuildContext context) {
-    return Padding(
+  List<String> ids=
+  Provider.of<List<String>>(context);
+
+  return Padding(
     key: Key(b.id.toString()),
     padding: const EdgeInsets.all(8.0),
     child: new Container(
@@ -181,12 +190,13 @@ Widget _buildBookItem(Book b, BuildContext context) {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             IconButton(
-              icon:Provider.of<WishlistNotifier>(context).wishlist.contains(b.id)? Icon(Icons.star_border):Icon(Icons.star),
-              onPressed: () {
-                Provider.of<WishlistNotifier>(context, listen: false)
-                    .appendBook(b);
-              },
-            ),
+                icon: (ids!=null && ids.contains(b.id) )? Icon(Icons.star_border) : Icon(Icons.star),
+                onPressed: () {
+                  (ids!=null && ids.contains(b.id) )?Provider.of<WishlistNotifier>(context, listen: false)
+                      .removeBook(b, context):
+                  Provider.of<WishlistNotifier>(context, listen: false)
+                      .appendBook(b, context);
+                }),
             IconButton(
               icon: Icon(Icons.add_circle_outline),
               onPressed: () {
@@ -209,6 +219,8 @@ Widget _buildBookItem(Book b, BuildContext context) {
   );
 }
 
+
+
 class Ext extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -224,8 +236,8 @@ class Ext extends StatelessWidget {
 }
 
 class MySearchBar extends StatefulWidget {
-  final void Function(String value,BuildContext context) parentAction;
-  final void Function(String value,BuildContext context) parentAction2;
+  final void Function(String value, BuildContext context) parentAction;
+  final void Function(String value, BuildContext context) parentAction2;
 
   MySearchBar({Key key, this.parentAction, this.parentAction2})
       : super(key: key);
@@ -285,7 +297,7 @@ class _MySearchBarState extends State<MySearchBar> {
                 iconSize: 30,
                 icon: Icon(Icons.search),
                 onPressed: () {
-                  widget.parentAction(_controller.value.text,context);
+                  widget.parentAction(_controller.value.text, context);
                   _controller.clear();
                 },
               ),
@@ -306,7 +318,7 @@ class _MySearchBarState extends State<MySearchBar> {
                       await Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => SearchBarcodeScreen(),
                   ));
-                  widget.parentAction2(barcode,context);
+                  widget.parentAction2(barcode, context);
                   _controller.clear();
                 },
               ),
